@@ -4,7 +4,7 @@ import { OIDCStrategy } from 'passport-azure-ad';
 dotenv.config();
 
 const initPassport = async () => {
-    const idmetadata = `${process.env.CLOUD_INSTANCE}${process.env.AZURE_TENANT_ID}/.well-known/openid-configuration`;
+    const idmetadata = `${process.env.CLOUD_INSTANCE}/${process.env.AZURE_TENANT_ID}/v2.0/.well-known/openid-configuration`;
     const clientId = process.env.AZURE_CLIENT_ID;
     const clientSecret = process.env.AZURE_CLIENT_SECRET;
     
@@ -22,6 +22,10 @@ const initPassport = async () => {
         useCookieInsteadOfSession: false, // Use cookies for session management
         scope: ['openid', 'profile', 'email'], // Specify the required scopes
         loggingLevel: 'info', // Adjust logging level as needed
+
+        // ADD THESE TWO LINES:
+    skipUserProfile: true, // Speeds up the process
+    loggingLevel: 'error', // Change to 'info' if you need more logs
     };
 
     const callbackFunction = (req, iss, sub, profile, accessToken, refreshToken, done) => {
